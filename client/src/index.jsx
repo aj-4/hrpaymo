@@ -19,6 +19,9 @@ import Navbar from './components/Navbar.jsx';
 // ---------- Helper ---------- //
 import feedManipulation from './feedManipulation.js'
 
+// ---------- Web Socket ---------- //
+import io from 'socket.io-client';
+
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: '#3D95CE',
@@ -34,7 +37,11 @@ class App extends React.Component {
       userFeed: {},
       balance: null,
       userInfo: {},
-      friends: []
+      friends: [],
+      socket: io(),
+      loggedInUserId: null,
+      messages: [],
+      notifications: []
     }
   }
 
@@ -153,13 +160,48 @@ class App extends React.Component {
       });
   }
 
+  toggleFriend(userId, friendId, isFriend) {
+    var method = isFriend ? 'rmFriend' : 'addFriend';
+    axios.post('/friends', { method, friendId, userId })
+      .then((response) => {
+        this.getFriendsList(this.state.loggedInUserId);
+      })
+      .catch((error) => {
+        console.log('error in toggleFriend (index.jsx)')
+      });
+  }
+
+  //Notiifications
+  newNotification(notif) {
+    this.setState({
+      notifications: [...this.state.notifications, notif]
+    });
+  }
+
+  newMessage(message) {
+    this.setState({
+      messages: [...this.state.messages, message]
+    });
+  }
+
+  clearMessagesForUser(user) {
+    console.log('username is ', user);
+    var keepTheseMessages = this.state.messages.filter(msg => {
+      return msg.user !== user
+    })
+    this.setState({
+      messages: keepTheseMessages
+    })
+  }
+
   logUserIn(userId) {
     // set the userId in the userInfo object as soon as the user logs in
     var obj = this.state.userInfo;
     obj.userId = userId;
     this.setState({
       isLoggedIn: true,
-      userInfo: obj
+      userInfo: obj,
+      loggedInUserId: userId
     })
     this.loadUserData(userId);
   }
@@ -171,7 +213,8 @@ class App extends React.Component {
       userFeed: {},
       balance: null,
       userInfo: {},
-      friends: []
+      friends: [],
+      socket: null
     })
   }
 
@@ -195,6 +238,12 @@ class App extends React.Component {
                 userInfo={this.state.userInfo}
                 balance={this.state.balance}
                 friends={this.state.friends}
+                socket={this.state.socket}
+                newMessage={this.newMessage.bind(this)}
+                newNotification={this.newNotification.bind(this)}
+                clearMessagesForUser={this.clearMessagesForUser.bind(this)}
+                messages={this.state.messages}
+                notifications={this.state.notifications}
                 {...props}
               />
           }
@@ -217,6 +266,13 @@ class App extends React.Component {
                 isLoggedIn={this.state.isLoggedIn} 
                 logUserOut={this.logUserOut.bind(this)}
                 userInfo={this.state.userInfo}
+                friends={this.state.friends}
+                toggleFriend={this.toggleFriend.bind(this)}
+                loggedInUserId={this.state.loggedInUserId}
+                socket={this.state.socket}
+                clearMessagesForUser={this.clearMessagesForUser.bind(this)}
+                messages={this.state.messages}
+                notifications={this.state.notifications}
                 {...routeProps} 
               />
           }

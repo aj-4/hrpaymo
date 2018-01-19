@@ -90,17 +90,38 @@ app.get('/balance', (req, res) => {
 });
 
 app.get('/friends', (req, res) => {
-  var userId = req.query.userId;
-  db.profile.getFriendsList(parseInt(_.escape(userId.replace(/"/g, "'"))), (err, rows) => {
-    if (err) {
-      console.error('Error occured getting friends list', err);
-      res.status(500).json(err);
-    } else {
-      res.status(200).json({friends: rows});
-    }
-  })
-})
+    var userId = req.query.userId;
+    db.profile.getFriendsList(parseInt(_.escape(userId.replace(/"/g, "'"))), (err, rows) => {
+      if (err) {
+        console.error('Error occured getting friends list', err);
+        res.status(500).json(err);
+      } else {
+        res.status(200).json({ friends: rows });
+      }
+    })
+});
 
+app.post('/friends', (req, res) => {
+  if (req.body.method === 'addFriend') {
+    console.log('in server, adding friend');
+    db.profile.addFriend(req.body.friendId, req.body.userId, (err, data) => {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.status(200).json('success')
+      }
+    });
+  } else if (req.body.method === 'rmFriend') {
+    console.log('in server, removing friend');
+    db.profile.rmFriend(req.body.friendId, req.body.userId, (err,data) => {
+      if (err) {
+        res.status(500).json(err);
+      } else {
+        res.status(200).json('success')
+      }
+    });
+  }
+});
 
 app.post('/signup', (req, res) => {
   // check to see if req fields are empty

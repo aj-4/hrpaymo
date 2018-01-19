@@ -14,8 +14,8 @@ class ChatBox extends React.Component {
         return (
           <List>
               {
-                    this.props.chats && this.props.chats.length &&
-                    this.props.chats.map((chat, index) => {
+                    this.props.chats && this.props.chats.length 
+                    ? this.props.chats.map((chat, index) => {
                         return (
                             <ListItem 
                               key={index} 
@@ -27,6 +27,11 @@ class ChatBox extends React.Component {
                             />
                         );
                     })
+                    : <ListItem 
+                            className="single-chat"
+                            rightIcon={<CommunicationChatBubble />}
+                            primaryText={'Set a message to start the chat'}
+                      />
               }
           </List>
         );

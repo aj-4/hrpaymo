@@ -43,6 +43,12 @@ CREATE TABLE FRIENDSHIPS (
   created_at timestamp DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE MESSAGES (
+  id SERIAL PRIMARY KEY,
+  sender_id INT REFERENCES USERS(id),
+  receiver_id INT REFERENCES USERS(id),
+  created_at timestamp DEFAULT CURRENT_TIMESTAMP
+)
 
 INSERT INTO USERS (username, first_name, last_name, phone, password, email, avatar_url) VALUES ('Aaron', 'Aaron', 'Pietsch', 1111111111, 'password', 'aaron@hackreactor.com', 'https://media.licdn.com/mpr/mpr/shrinknp_200_200/AAIA_wDGAAAAAQAAAAAAAAopAAAAJDY5ZTRkYjlhLTM5OTEtNDZhYS1iNGM4LTRmZTk5NmI0MzFlYw.jpg');
 INSERT INTO USERS (username, first_name, last_name, phone, password, email, avatar_url) VALUES ('Larry', 'Larry', 'Chang', 2222222222, 'password', 'larry@githell.com', 'https://upload.wikimedia.org/wikipedia/commons/7/77/Avatar_cat.png');

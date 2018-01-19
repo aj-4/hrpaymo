@@ -60,13 +60,30 @@ module.exports = {
     .catch(err => {
       console.error('err in getFriendsList db')
     })
-    // .innerJoin('users', 'friendships.to_user', 'users.id')
-    // .then()
-    
-    // function(){
-    //   console.log(this);
-    //   this.on('users.user_id', '=', 'friendships.to_user')
-    //       .orOn('users.user_id', '=', 'friendships.from_user')
-    // }
+  },
+
+  addFriend: (friendId, userId, callback) => {
+    return pg.table('friendships')
+    .insert({from_user: userId, to_user: friendId, verified: false})
+    .then(data => {
+      callback(null, data)
+    })
+    .catch(err => {
+      callback(err, null);
+    })
+  },
+
+  rmFriend: (friendId, userId, callback) => {
+    console.log('friend id is ', friendId, 'user id is', userId);
+    return pg.table('friendships')
+    .where({from_user: friendId, to_user: userId})
+    .orWhere({from_user: userId, to_user: friendId})    
+    .del()
+    .then(data => {
+      callback(null, data)
+    })
+    .catch(err => {
+      callback(err, null);
+    })
   }
 };

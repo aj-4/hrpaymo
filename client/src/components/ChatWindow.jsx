@@ -3,6 +3,7 @@ import React from 'react';
 // ---------- Sub Components ---------- //
 import ChatMessagesList from './ChatMessagesList.jsx';
 import ChatBox from './ChatBox.jsx';
+import MessagesBadge from './MessagesBadge.jsx';
 
 // ---------- Material UI ---------- //
 import Dialog from 'material-ui/Dialog';
@@ -24,14 +25,9 @@ export default class ChatWindow extends React.Component {
             messageInput: {
                 username: 'you',
                 time: 'just now',
-                to: this.props.friend.username,
                 text: ''
             },
-            chats: [
-                { user: this.props.friend.first_name, text: 'hey man', time: 'just now' },
-                { user: this.props.friend.first_name, text: 'you there?', time: 'just now' },
-                { user: 'you', text: 'yeah', time: 'just now' }
-            ]
+            chats: []
         };
         this.handleClose = this.handleClose.bind(this);
         this.handleInputChanges = this.handleInputChanges.bind(this);
@@ -54,12 +50,14 @@ export default class ChatWindow extends React.Component {
             open: true
         });   
         this.scrollToBottom();
+        this.props.clearMessagesForUser(this.props.friend.username);
       };
     
       handleClose() {
         this.setState({
             open: false,
         });
+        this.props.clearMessagesForUser(this.props.friend.username);
       };
 
     handleInputChanges(event) {
@@ -83,6 +81,8 @@ export default class ChatWindow extends React.Component {
 
     receiveChat(messageInput) {
         const { chats } = this.state;
+        this.props.newMessage(messageInput);
+        console.log('running receive chat');
         this.setState({
             chats: [...chats, messageInput]
         });
@@ -116,7 +116,6 @@ export default class ChatWindow extends React.Component {
     }
 
     render(){
-
         const friendName = this.props.friend.first_name + ' ' + this.props.friend.last_name;
         const modalTitle = `Chat with ${friendName}`;
 
@@ -154,11 +153,13 @@ export default class ChatWindow extends React.Component {
             <div className='chat-box-window'>
                 <ListItem
                     style={this.props.online ? onlineStyles : inactiveStyles}
-                    leftIcon={<CommunicationChatBubble /> }
                     disabled={!this.props.online}
                     primaryText={friendName}
                     leftAvatar={<Avatar src={this.props.friend.avatar_url} />}
-                    rightIcon={<CommunicationChatBubble />}
+                    rightIcon={<MessagesBadge 
+                        newMessages={this.props.newMessages}
+                        online={this.props.online}
+                        style={this.props.online ? { color: 'black' } : { opacity: 0 }}/>}
                     onClick={this.handleOpen.bind(this)}
                 />
                 <Divider inset={true} />

@@ -16,7 +16,6 @@ let userSockets = {};
 
 io.on('connection', (socket) => {
   socket.on('disconnect', function () {
-    //slice socket.id (VALUE) out of userSockets object
     for (let user in userSockets) {
       if (userSockets[user] === socket.id) {
         delete userSockets[user];
@@ -31,6 +30,10 @@ io.on('connection', (socket) => {
     io.sockets
     .emit('friendsOnline', Object.keys(userSockets));
   })
+  socket.on('friendsOnline', (req => {
+    io.sockets
+    .emit('friendsOnline', Object.keys(userSockets));
+  }))
   socket.on('private', (msg) => {
     io.sockets.sockets[userSockets[msg.to]]
     .emit("private", { from: msg.from, to: msg.to, msg: msg.msg.text });

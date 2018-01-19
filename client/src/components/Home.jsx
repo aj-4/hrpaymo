@@ -34,8 +34,10 @@ class Home extends React.Component {
     return (
       <div>
         <Navbar 
+          socket={this.props.socket}
           isLoggedIn={this.props.isLoggedIn} 
           logUserOut={this.props.logUserOut}
+          newMessages={this.props.messages}
         />
         <div className="home">
           <div className="home-leftColumn pay-feed-container">
@@ -55,9 +57,14 @@ class Home extends React.Component {
               balance={this.props.balance}
               userInfo={this.props.userInfo}/>
             <ContactsList 
+              newMessage={this.props.newMessage}
+              newMessages={this.props.messages}
+              newNotification={this.props.newNotification}
+              clearMessagesForUser={this.props.clearMessagesForUser}
               friends={this.props.friends}
               uiAvatar={this.props.userInfo.avatarUrl || '/images/no-image.gif'}
               loggedInUsername={this.props.userInfo.username}
+              socket={this.props.socket}
             />
           </div>
         </div>
