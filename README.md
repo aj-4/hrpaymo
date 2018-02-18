@@ -2,7 +2,7 @@
 
 > Venmo - like Application with Robust Additional Features
 
->> Stack: React, Redux, Express, PostgreSQL + Knex, Google OAuth, Socket.io
+>> Stack: React, Redux, NodeJS, Express, PostgreSQL + Knex, Google OAuth, Socket.io
 
 # Demo of Aaron's Features
 ![Demo](https://media.giphy.com/media/5ziP3ymybzo2Mw3W5J/giphy.gif)
