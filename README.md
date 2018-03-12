@@ -4,7 +4,7 @@
 
 >> Stack: React, Redux, NodeJS, Express, PostgreSQL + Knex, Google OAuth, Socket.io
 
-# Demo of Aaron's Features
+# Feature Demo
 ![Demo](https://media.giphy.com/media/5ziP3ymybzo2Mw3W5J/giphy.gif)
 
 ## Collaborators
